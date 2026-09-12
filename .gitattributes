@@ -1,0 +1,3 @@
+# Windows: git с core.autocrlf=true иначе выдаёт CRLF, и shell-скрипты
+# (init.sh, scripts/preflight.sh, dev/nodejs/entrypoint.sh) ломаются в Linux-контейнерах.
+* text=auto eol=lf
