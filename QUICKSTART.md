@@ -4,7 +4,7 @@
 
 ## Что нужно
 
-- Linux или macOS. На Windows тоже можно, но только внутри WSL2.
+- Linux или macOS. На Windows тоже можно, но только внутри WSL2: клонировать и запускать из Linux-каталога WSL (например, `~/src`), а не из `/mnt/c/...`, и Linux-овым git, а не Git for Windows. Иначе git на Windows переводит файлы в CRLF, и скрипты ломаются с ошибками вида `$'\r': command not found` или `/bin/sh^M: bad interpreter`. В репозиториях есть `.gitattributes`, который принудительно оставляет LF, но старый клон, сделанный до его появления, нужно перечитать: `git config core.autocrlf false && git rm -rq --cached . && git reset --hard` (или просто склонировать заново).
 - Docker с Compose v2: команда `docker compose version` должна работать. На Mac это Docker Desktop.
 - Оперативная память для Docker: минимум 8 ГБ, лучше 10. Сборка интерфейса прожорливая. На Mac лимит задаётся в Docker Desktop → Settings → Resources.
 - Свободный порт 8080.
@@ -48,8 +48,10 @@ AUTH_DEV_LOGIN_ENABLED=true
 
 ```sh
 cd datalens
-./init.sh --dev --dev-env --dev-us --dev-auth --dev-ui --dev-build
+./init.sh --dev --dev-env --dev-us --dev-auth --dev-ui --dev-root --dev-build
 ```
+
+`--dev-root` обязателен на Linux и WSL: без него контейнеры работают под своим пользователем и не могут писать в смонтированные каталоги форков, сборка падает с `EACCES: permission denied`. На Mac флаг не мешает. Побочный эффект: `dist` и `node_modules` в форках будут принадлежать root; если позже захочется собирать их на хосте, сначала `sudo chown -R $(id -u):$(id -g) ../datalens-us ../datalens-ui ../datalens-auth`.
 
 Первый запуск долгий, 10–20 минут: контейнеры ставят зависимости и собирают интерфейс. Прогресс:
 
