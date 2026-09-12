@@ -413,9 +413,11 @@ datalens-auth: jwt-auth.ts подписывает PS256 приватным кл�
 | Репозиторий | Коммиты в `acl` | Что внутри |
 |---|---|---|
 | datalens-us | 3 | миграция `access_bindings` / `access_settings`, модуль `src/components/access`, плагин `registry/plugins/acl`, флаги `OBJECT_ACL_ENABLED` / `ACL_ROOT_DEFAULT_ROLE`, 8 роутов access-bindings / access-settings, `acl:bootstrap`, детерминированный `getParents` |
-| datalens-ui | 2 | диалог доступа подключён (`COLLECTIONS_ACCESS_ENABLED`), `extensions` → US и auth, роль noAccess, переключатель наследования; кнопка SSO и прокси `/auth/oidc/*` |
-| datalens-auth | 1 | generic OIDC: `/oidc/login`, `/oidc/callback`, `OIDC_ALLOWED_GROUPS`, `OIDC_LINK_LOCAL_BY_EMAIL`, HTML-редирект после входа |
-| datalens | 3 | env в compose, `docs/acl.md`, `docs/sso.md`, README |
+| datalens-ui | 3 | тестовый вход на странице входа; диалог доступа подключён (`COLLECTIONS_ACCESS_ENABLED`), `extensions` → US и auth, роль noAccess, переключатель наследования; кнопка SSO и прокси `/auth/oidc/*` |
+| datalens-auth | 2 | тестовый вход `POST /dev/signin`; generic OIDC: `/oidc/login`, `/oidc/callback`, `OIDC_ALLOWED_GROUPS`, `OIDC_LINK_LOCAL_BY_EMAIL`, HTML-редирект после входа |
+| datalens | 4 | env в compose, `docs/acl.md`, `docs/sso.md`, `docs/dev-login.md`, README |
+
+Дополнительно, вне исходного плана: **тестовый вход по почте без пароля** (`AUTH_DEV_LOGIN_ENABLED`) для локальной проверки прав. Отдельный `POST /dev/signin` в auth, блок на странице входа с галочкой «выдать роль editor», пользователи помечены `idp_type = dev` и никогда не пересекаются с локальными и SSO-учётками. Проверено на стенде: 16 сценарных проверок, включая создание в корне под editor, отказ viewer'у, выдачу прав между двумя тестовыми пользователями через диалог.
 
 Проверки, выполненные при приёмке:
 
